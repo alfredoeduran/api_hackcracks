@@ -134,12 +134,16 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Origin': 'https://alfredoeduran.github.io',
-                        'Access-Control-Allow-Origin': '*'
+                        'Origin': 'https://alfredoeduran.github.io'
                     },
                     mode: 'cors',
+                    credentials: 'omit',
                     body: JSON.stringify({ pregunta: message })
                 });
+
+                if (!response.ok) {
+                    throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+                }
 
                 const data = await response.json();
                 
@@ -161,7 +165,13 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('Lo siento, hubo un error al procesar tu mensaje.');
+                if (error.message.includes('CORS')) {
+                    addMessage('Error de CORS: No se puede acceder al servidor. Por favor, verifica la configuración del servidor.');
+                } else if (error.message.includes('Failed to fetch')) {
+                    addMessage('Error de conexión: No se pudo conectar con el servidor. Verifica que el servidor esté en línea.');
+                } else {
+                    addMessage(`Error: ${error.message}`);
+                }
             }
         }
 
