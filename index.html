@@ -134,7 +134,10 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Origin': 'https://alfredoeduran.github.io',
+                        'Access-Control-Allow-Origin': '*'
                     },
+                    mode: 'cors',
                     body: JSON.stringify({ pregunta: message })
                 });
 
